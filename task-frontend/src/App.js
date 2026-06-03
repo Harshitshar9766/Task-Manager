@@ -6,16 +6,24 @@ import {
   deleteTask,
   updateTask,
   getTaskById,
-  searchTaskByTitle
+  searchTaskByTitle,
+  loginUser
 } from "./service/Api";
 
 function App() {
+
+const [user, setUser] = useState(null);
+const [email, setEmail] = useState("");
+const [password, setPassword] = useState("");
+
+
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
 const [editingId, setEditingId] = useState(null);
 const [description, setDescription] = useState("");
 const [searchId, setSearchId] = useState("");
 const [searchTitle, setSearchTitle] = useState("");
+
 
   useEffect(() => {
     loadTasks();
@@ -52,6 +60,15 @@ const [searchTitle, setSearchTitle] = useState("");
   }
 };
 
+const handleLogin = () => {
+  loginUser({ email, password })
+    .then((res) => {
+      setUser(res.data);  
+    })
+    .catch(() => {
+      alert("Invalid credentials");
+    });
+};
 
   const handleDelete = (id) => {
     deleteTask(id).then(() => loadTasks());
@@ -80,9 +97,29 @@ const handleSearchByTitle = () => {
   return (
     <div className="container">
       <h2>Task Manager</h2>
+      {!user ? (
+  <div className="container">
+    <h2>Login</h2>
 
+    <input
+      type="email"
+      placeholder="Enter email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+    />
+
+    <input
+      type="password"
+      placeholder="Enter password"
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+    />
+
+    <button onClick={handleLogin}>Login</button>
+  </div>
+) : (
+<>
   <div className="search-box">
-  
  
   <div className="search-row">
     <input
@@ -160,6 +197,8 @@ const handleSearchByTitle = () => {
 </li>
         ))}
       </ul>
+      </> 
+)}
     </div>
   );
 }
