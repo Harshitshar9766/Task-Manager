@@ -26,14 +26,14 @@ public class TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
         task.setUser(user);
-
         return taskRepository.save(task);
     }
 
     @Override
-    public List<Task> getAll() {
-        return taskRepository.findAll();
+    public List<Task> getAllByUser(Long userId) {
+        return taskRepository.findAllByUserId(userId);
     }
+
 
     @Override
     public Task update(Long id, Task task) {
@@ -62,7 +62,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task getById(Long id) {
-        return taskRepository.findById(id).orElse(null);
+    public Task getById(Long id,Long userId) {
+        return taskRepository.findByIdAndUserId(id, userId).orElse(null);
     }
 }

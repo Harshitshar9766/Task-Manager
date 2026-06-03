@@ -24,6 +24,8 @@ const [description, setDescription] = useState("");
 const [searchId, setSearchId] = useState("");
 const [searchTitle, setSearchTitle] = useState("");
 
+const [dueDate, setDueDate] = useState("");
+const [completed, setCompleted] = useState(false);
 
   useEffect(() => {
     loadTasks();
@@ -41,24 +43,31 @@ const [searchTitle, setSearchTitle] = useState("");
   const taskData = {
     title,
     description,
-    completed: false
+    dueDate,
+    completed
   };
 
   if (editingId) {
     updateTask(editingId, taskData).then(() => {
       setEditingId(null);
-      setTitle("");
-      setDescription("");
+      resetForm();
       loadTasks();
     });
   } else {
-    createTask(taskData).then(() => {
-      setTitle("");
-      setDescription("");
+    createTask(user.id,taskData).then(() => {
+    resetForm();
       loadTasks();
     });
   }
 };
+
+
+const resetForm = () => {
+     setTitle("");
+           setDescription("");
+             setDueDate("");
+  setCompleted(false);
+}
 
 const handleLogin = () => {
   loginUser({ email, password })
@@ -144,7 +153,11 @@ const handleSearchByTitle = () => {
 
 
   <div className="reset-row" >
-    <button onClick={loadTasks}>Reset</button>
+    <button onClick={() => { loadTasks();
+       resetForm(); 
+       setSearchId("");
+        setSearchTitle("");
+         }}>Reset</button>
   </div>
 
 </div>
@@ -165,6 +178,23 @@ const handleSearchByTitle = () => {
     onChange={(e) => setDescription(e.target.value)}
   />
 
+
+<input
+type="date"
+value={dueDate}
+onChange={(e) => setDueDate(e.target.value)}
+/>
+
+
+<label style={{display: "flex", alignItems:"center", gap:"5px" }}>
+<input
+type="checkbox"
+checked={completed}
+onChange={(e) => setCompleted(e.target.checked)}
+/>
+Completed
+</label>
+
   <button className="add-btn" onClick={handleAdd}>
     {editingId ? "Update" : "Add"}
   </button>
@@ -176,6 +206,8 @@ const handleSearchByTitle = () => {
   <div>
     <strong>{task.title}</strong>
     <p>{task.description}</p>
+    <p>Due Date:{task.dueDate}</p>
+    <p>Status: {task.completed ? "Completed" : "Pending"}</p>
   </div>
 
   <div>

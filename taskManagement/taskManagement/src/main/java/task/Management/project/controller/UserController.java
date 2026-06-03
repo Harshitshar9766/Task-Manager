@@ -13,13 +13,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // Register
+
     @PostMapping("/register")
     public User register(@RequestBody User user) {
         return userService.register(user);
     }
 
-    // Login
+
     @PostMapping("/login")
     public User login(@RequestBody User user) {
         return userService.login(user.getEmail(), user.getPassword());

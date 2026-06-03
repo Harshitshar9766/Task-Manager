@@ -31,10 +31,11 @@ public class TaskController {
         );
     }
 
-    @GetMapping
-    public List<Task> getAll() {
-        return taskService.getAll();
+    @GetMapping("/user/{userId}")
+    public List<Task> getAllTasks(@PathVariable Long userId) {
+        return taskService.getAllByUser(userId);
     }
+
 
     @PutMapping("/{id}")
     public Task update(@PathVariable Long id, @RequestBody Task task) {
@@ -47,18 +48,17 @@ public class TaskController {
         return ResponseEntity.ok("Deleted");
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable Long id){
-        Task task = taskService.getById(id);
-
+    @GetMapping("/{userId}/{id}")
+    public ResponseEntity<?> getById( @PathVariable Long id, @PathVariable Long userId){
+        Task task = taskService.getById(id, userId);
         if(task == null){
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body("Task not found with id: " + id);
+                    .body("Task not found ");
         }
-
         return ResponseEntity.ok(task);
     }
+
 
     @GetMapping("/search/{title}")
     public ResponseEntity<?> getByTitle(@PathVariable String title){

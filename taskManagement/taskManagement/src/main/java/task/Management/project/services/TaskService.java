@@ -8,7 +8,7 @@ public interface TaskService {
 
     Task save(Task task, Long userId);
 
-    List<Task> getAll();
+    List<Task> getAllByUser(Long userId);
 
     Task update(Long id, Task task);
 
@@ -16,6 +16,6 @@ public interface TaskService {
 
     List<Task> getByTitle(String title);
 
-    Task getById(Long id);
+    Task getById(Long id, Long userId);
 
 }
